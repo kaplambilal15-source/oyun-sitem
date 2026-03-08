@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Ultra Coin Clicker</title>
+
+<style>
+
+body{
+font-family:Arial;
+text-align:center;
+background:linear-gradient(135deg,#1e1e2f,#2a2a40);
+color:white;
+margin:0;
+}
+
+h1{
+margin-top:20px;
+}
+
+#money{
+font-size:30px;
+margin:10px;
+}
+
+#coin{
+font-size:90px;
+cursor:pointer;
+margin:30px;
+transition:0.1s;
+}
+
+#coin:active{
+transform:scale(0.85);
+}
+
+.shop{
+background:#333;
+padding:15px;
+border-radius:10px;
+width:260px;
+margin:auto;
+}
+
+button{
+padding:10px;
+margin:5px;
+font-size:16px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+background:#4CAF50;
+color:white;
+}
+
+button:hover{
+background:#45a049;
+}
+
+#ad{
+margin-top:30px;
+padding:15px;
+background:#111;
+border-top:2px solid #444;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>💰 Ultra Coin Clicker</h1>
+
+<div id="money">Para: 0</div>
+
+<div id="coin" onclick="clickCoin()">💰</div>
+
+<div class="shop">
+
+<h2>Mağaza</h2>
+
+<button onclick="buyClick()">Tıklama Gücü +1 (50)</button>
+
+<button onclick="buyAuto()">Otomatik Kazanç (100)</button>
+
+</div>
+
+<div id="ad">
+
+<h3>Reklam</h3>
+
+<p>Buraya reklam ekleyebilirsin</p>
+
+<button onclick="window.open('https://www.google.com')">
+TIKLA
+</button>
+
+</div>
+
+<script>
+
+let money = 0
+let clickPower = 1
+let auto = 0
+
+function clickCoin(){
+
+money += clickPower
+
+update()
+
+save()
+
+}
+
+function buyClick(){
+
+if(money >= 50){
+
+money -= 50
+
+clickPower++
+
+}
+
+update()
+
+save()
+
+}
+
+function buyAuto(){
+
+if(money >= 100){
+
+money -= 100
+
+auto++
+
+}
+
+update()
+
+save()
+
+}
+
+function update(){
+
+document.getElementById("money").innerText = "Para: " + money
+
+}
+
+setInterval(function(){
+
+money += auto
+
+update()
+
+save()
+
+},1000)
+
+function save(){
+
+localStorage.setItem("money",money)
+
+localStorage.setItem("clickPower",clickPower)
+
+localStorage.setItem("auto",auto)
+
+}
+
+function load(){
+
+money = Number(localStorage.getItem("money")) || 0
+clickPower = Number(localStorage.getItem("clickPower")) || 1
+auto = Number(localStorage.getItem("auto")) || 0
+
+update()
+
+}
+
+load()
+
+</script>
+
+</body>
+  </html>
