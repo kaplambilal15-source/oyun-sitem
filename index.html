@@ -1,0 +1,250 @@
+Kalp kırıklığı oyunu
+<!DOCTYPE html><html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kırık Kalp Simülasyonu</title><style>
+body{
+font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+background:#2c3e50;
+color:#ecf0f1;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+margin:0;
+text-align:center;
+}
+
+#game-container{
+background:#34495e;
+padding:30px;
+border-radius:15px;
+box-shadow:0 10px 25px rgba(0,0,0,0.5);
+width:500px;
+max-width:90%;
+border:2px solid #7f8c8d;
+}
+
+h1{
+color:#e74c3c;
+margin-bottom:20px;
+}
+
+p{
+font-size:1.1em;
+line-height:1.6;
+margin-bottom:20px;
+}
+
+.btn{
+background:#3498db;
+color:white;
+border:none;
+padding:12px 24px;
+font-size:1em;
+border-radius:5px;
+cursor:pointer;
+margin:5px;
+transition:background .3s;
+}
+
+.btn:hover{
+background:#2980b9;
+}
+
+.btn-danger{
+background:#e74c3c;
+}
+
+.btn-danger:hover{
+background:#c0392b;
+}
+
+.btn-success{
+background:#27ae60;
+}
+
+.btn-success:hover{
+background:#219150;
+}
+
+#status-bar{
+margin-top:20px;
+padding:10px;
+background:#2c3e50;
+border-radius:5px;
+font-size:.9em;
+color:#bdc3c7;
+}
+
+.hidden{
+display:none;
+}
+</style></head><body><div id="game-container"><h1 id="title">Hayat Simülasyonu</h1><div id="scene-text">
+<p>Oyunu başlatmak için karakterini seç.</p>
+</div><div id="choices">
+<button class="btn" onclick="startGame('Kadın')">Kadın Karakter</button>
+<button class="btn" onclick="startGame('Erkek')">Erkek Karakter</button>
+</div><div id="status-bar" class="hidden">
+Moral: <span id="moral-val">100</span>% |
+Durum: <span id="status-text">Normal</span>
+</div></div><script>
+
+let currentGender=""
+let moral=100
+let stage=0
+
+const sceneText=document.getElementById("scene-text")
+const choicesDiv=document.getElementById("choices")
+const statusBar=document.getElementById("status-bar")
+const moralVal=document.getElementById("moral-val")
+const statusText=document.getElementById("status-text")
+
+function updateStatus(){
+
+if(moral<0)moral=0
+if(moral>100)moral=100
+
+moralVal.innerText=moral
+
+if(stage==4){
+statusText.innerText="Depresyon"
+}else if(stage==2){
+statusText.innerText="Travma"
+}else{
+statusText.innerText="Normal"
+}
+
+}
+
+function showScene(text,buttons){
+
+sceneText.innerHTML="<p>"+text+"</p>"
+choicesDiv.innerHTML=""
+
+buttons.forEach(btn=>{
+
+let button=document.createElement("button")
+button.className="btn "+(btn.class||"")
+button.innerText=btn.text
+button.onclick=btn.action
+
+choicesDiv.appendChild(button)
+
+})
+
+}
+
+function startGame(gender){
+
+currentGender=gender
+moral=100
+stage=1
+
+statusBar.classList.remove("hidden")
+
+updateStatus()
+
+showScene(
+currentGender+" karakteri olarak hayata başladın. İşinde çalışıyorsun, evcil hayvanınla oynuyorsun ve arkadaşlarınla vakit geçiriyorsun. Her şey güzel görünüyor...",
+[
+{text:"Hayatı Yaşamaya Devam Et",action:triggerHeartbreak}
+]
+)
+
+}
+
+function triggerHeartbreak(){
+
+stage=2
+moral=40
+updateStatus()
+
+showScene(
+"Aniden büyük bir kalp kırıklığı yaşadın! İlişkin bitti. Arkadaşların seni suçladı ve evcil hayvanın bile senden uzaklaştı.",
+[
+{text:"Sıfırdan Başla",class:"btn-danger",action:()=>location.reload()},
+{text:"Devam Et",class:"btn-success",action:startDepressionPhase}
+]
+)
+
+}
+
+function startDepressionPhase(){
+
+stage=4
+
+showScene(
+"Kendini toparlamaya karar verdin. Ne yapmak istersin?",
+[
+{text:"Arabaya Binip Şehri Dolaş",action:randomEvent},
+{text:"Evde Otur ve Düşün",action:randomEvent},
+{text:"Yeni Arkadaşlar Ara",action:randomEvent}
+]
+)
+
+}
+
+function randomEvent(){
+
+const events=[
+
+{text:"Şehirde dolaşırken güzel bir manzara gördün.",effect:20},
+
+{text:"Evde eski anılar aklına geldi ve moralin düştü.",effect:-15},
+
+{text:"Yeni biriyle tanıştın ve biraz mutlu oldun.",effect:25},
+
+{text:"Yalnız kaldın ve düşünceler seni yordu.",effect:-20},
+
+{text:"Kendine güzel yemek yaptın.",effect:15}
+
+]
+
+let event=events[Math.floor(Math.random()*events.length)]
+
+moral+=event.effect
+
+updateStatus()
+
+let message=event.text+" "
+
+if(moral>=80){
+
+message+="<br><strong>Tebrikler! Kendini toparladın ve hayata yeniden başladın.</strong>"
+
+showScene(message,
+[
+{text:"Oyunu Yeniden Başlat",class:"btn-success",action:()=>location.reload()}
+])
+
+return
+
+}
+
+if(moral<=0){
+
+message+="<br><strong>Moral tamamen bitti. Oyun sona erdi.</strong>"
+
+showScene(message,
+[
+{text:"Tekrar Dene",class:"btn-danger",action:()=>location.reload()}
+])
+
+return
+
+}
+
+message+="<br>Moral Durumu: "+moral+"%"
+
+showScene(message,
+[
+{text:"Devam Et",action:randomEvent},
+{text:"Sıfırdan Başla",class:"btn-danger",action:()=>location.reload()}
+])
+
+}
+
+</script></body>
+  </html>
