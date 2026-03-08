@@ -7,10 +7,10 @@
 <style>
 
 body{
+background:#1e1e2f;
+color:white;
 font-family:Arial;
 text-align:center;
-background:linear-gradient(135deg,#1e1e2f,#2a2a40);
-color:white;
 margin:0;
 }
 
@@ -19,49 +19,44 @@ margin-top:20px;
 }
 
 #money{
-font-size:30px;
-margin:10px;
+font-size:35px;
+margin:20px;
 }
 
 #coin{
-font-size:90px;
+width:150px;
 cursor:pointer;
-margin:30px;
 transition:0.1s;
 }
 
 #coin:active{
-transform:scale(0.85);
+transform:scale(0.9);
 }
 
 .shop{
-background:#333;
-padding:15px;
-border-radius:10px;
-width:260px;
-margin:auto;
+margin-top:20px;
 }
 
 button{
-padding:10px;
-margin:5px;
+padding:10px 20px;
 font-size:16px;
+margin:5px;
 border:none;
 border-radius:8px;
-cursor:pointer;
 background:#4CAF50;
 color:white;
-}
-
-button:hover{
-background:#45a049;
+cursor:pointer;
 }
 
 #ad{
-margin-top:30px;
-padding:15px;
+margin-top:40px;
 background:#111;
-border-top:2px solid #444;
+padding:15px;
+}
+
+#ad img{
+width:300px;
+border-radius:10px;
 }
 
 </style>
@@ -73,7 +68,7 @@ border-top:2px solid #444;
 
 <div id="money">Para: 0</div>
 
-<div id="coin" onclick="clickCoin()">💰</div>
+<img id="coin" src="https://cdn-icons-png.flaticon.com/512/138/138292.png" onclick="clickCoin()">
 
 <div class="shop">
 
@@ -89,11 +84,7 @@ border-top:2px solid #444;
 
 <h3>Reklam</h3>
 
-<p>Buraya reklam ekleyebilirsin</p>
-
-<button onclick="window.open('https://www.google.com')">
-TIKLA
-</button>
+<img src="https://via.placeholder.com/300x100?text=REKLAM">
 
 </div>
 
@@ -105,43 +96,31 @@ let auto = 0
 
 function clickCoin(){
 
-money += clickPower
+money = money + clickPower
 
 update()
-
-save()
 
 }
 
 function buyClick(){
 
 if(money >= 50){
-
-money -= 50
-
-clickPower++
-
+money = money - 50
+clickPower = clickPower + 1
 }
 
 update()
-
-save()
 
 }
 
 function buyAuto(){
 
 if(money >= 100){
-
-money -= 100
-
-auto++
-
+money = money - 100
+auto = auto + 1
 }
 
 update()
-
-save()
 
 }
 
@@ -153,37 +132,12 @@ document.getElementById("money").innerText = "Para: " + money
 
 setInterval(function(){
 
-money += auto
-
+money = money + auto
 update()
-
-save()
 
 },1000)
-
-function save(){
-
-localStorage.setItem("money",money)
-
-localStorage.setItem("clickPower",clickPower)
-
-localStorage.setItem("auto",auto)
-
-}
-
-function load(){
-
-money = Number(localStorage.getItem("money")) || 0
-clickPower = Number(localStorage.getItem("clickPower")) || 1
-auto = Number(localStorage.getItem("auto")) || 0
-
-update()
-
-}
-
-load()
 
 </script>
 
 </body>
-  </html>
+</html>
